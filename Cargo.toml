@@ -1,0 +1,10 @@
+[package]
+name = "cl"
+version = "0.1.0"
+authors = ["dat14mak <dat14mak@student.lu.se>"]
+
+[dependencies]
+deque = "0.3.2"
+num_cpus = "0.2"
+ignore = "0.4.2"
+clap = "2.32.0"
