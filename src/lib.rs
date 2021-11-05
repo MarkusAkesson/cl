@@ -43,7 +43,7 @@ pub enum LineConfig<'a> {
 }
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Clone)]
-pub enum language {
+pub enum Language {
     C,
     Cpp,
     Header,
@@ -59,7 +59,7 @@ pub enum language {
     Text,
     Markdown,
 }
-use self::language::*;
+use self::Language::*;
 
 impl language {
     pub fn to_string(&self) -> &str{
@@ -84,14 +84,14 @@ impl language {
 }
 
 
-impl fmt::Display for language {
+impl fmt::Display for Language {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         f.pad(self.to_string())
     }
 }
 
 
-pub fn get_language(filepath: &str) -> language {
+pub fn get_language(filepath: &str) -> Language {
     let path = Path::new(filepath);
 
     let filename_lower = path.file_name()
@@ -133,7 +133,7 @@ enum CommentStyle<'a> {
 
 use self::CommentStyle::*;
 
-fn get_language_config<'a>(language: &language) ->LineConfig <'a> {
+fn get_language_config<'a>(language: &Language) ->LineConfig <'a> {
     let c_style = Simple(Some("//"), Some(("/*", "*/")));
     let html_style = Simple(None, Some(("<!--", "-->")));
     let no_comments = Simple(None, None);
@@ -150,12 +150,12 @@ fn get_language_config<'a>(language: &language) ->LineConfig <'a> {
 
     match comment_style {
         Simple(single,multi) => LineConfig::Normal {
-            single: single,
-            multi: multi,
+            single,
+            multi
         },
         Extensive(singles,multis) => LineConfig::Everything {
-            singles: singles,
-            multis: multis,
+            singles,
+            multis
         },
     }
 }
@@ -279,8 +279,8 @@ pub fn count_normal(filepath: &str, single: Option<&str>, multi: Option<(&str,&s
             }
             continue;
         }
-        
-        
+
+
         let start_len = multi_start.len();
         let end_len = multi_end.len();
         let line_len = line.len();
@@ -324,7 +324,7 @@ pub fn count_normal(filepath: &str, single: Option<&str>, multi: Option<(&str,&s
             count.comments += 1;
         }
     }
-    
+
     count
 }
 
